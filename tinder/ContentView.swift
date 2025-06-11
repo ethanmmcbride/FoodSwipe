@@ -7,17 +7,32 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+struct ContentView : View {
+    var body : some View {
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("Home Page", systemImage: "house.fill")
+                }
+            AddFoodView()
+                .tabItem {
+                    Label("Add Food", systemImage: "fork.knife.circle.fill")
+                }
+            
+            SwipeView()
+                .tabItem {
+                    Label("Swipe", systemImage: "hand.draw")
+                }
+            
+            FavoritesView()
+                .tabItem {
+                    Label("Favorites", systemImage: "heart")
+                }
         }
-        .padding()
+        .tabViewStyle(.sidebarAdaptable)
     }
 }
+
 
 #Preview {
     ContentView()

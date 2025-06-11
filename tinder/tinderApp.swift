@@ -13,6 +13,5 @@ struct tinderApp: App {
         WindowGroup {
             ContentView()
         }
-        
     }
 }
