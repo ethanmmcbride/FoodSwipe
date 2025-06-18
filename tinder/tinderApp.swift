@@ -1,10 +1,3 @@
-//
-//  tinderApp.swift
-//  tinder
-//
-//  Created by Ethan McBride on 6/11/25.
-//
-
 import SwiftUI
 
 @main

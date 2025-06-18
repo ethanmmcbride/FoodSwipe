@@ -1,38 +1,34 @@
-//
-//  ContentView.swift
-//  tinder
-//
-//  Created by Ethan McBride on 6/11/25.
-//
-
 import SwiftUI
 
 
 
 struct ContentView : View {
-   
+    @AppStorage("selectedTab") private var selectedTab = "home"
     var body : some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             HomeView()
                 .tabItem {
                     Label("Home Page", systemImage: "house.fill")
-                }
+                }.tag("home")
             AddFoodView()
                 .tabItem {
                     Label("Add Food", systemImage: "fork.knife.circle.fill")
-                }
+                }.tag("add")
             
             SwipeView()
                 .tabItem {
                     Label("Swipe", systemImage: "hand.draw")
-                }
+                }.tag("swipe")
             
             FavoritesView()
                 .tabItem {
                     Label("Favorites", systemImage: "heart")
-                }
+                }.tag("favorite")
         }
         .tabViewStyle(.sidebarAdaptable)
+        
+        
+        
     }
 }
 

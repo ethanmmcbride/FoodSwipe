@@ -1,10 +1,3 @@
-//
-//  ImagePickerr.swift
-//  tinder
-//
-//  Created by Carla Madriz on 6/18/25.
-//
-
 import PhotosUI
 import SwiftUI
 
