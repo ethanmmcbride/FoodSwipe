@@ -10,7 +10,7 @@ struct AddFoodView: View {
     @State private var tags = ""
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker = false
-
+    @ObservedObject var viewModel: FoodViewModel
     
     let categories = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]
     
@@ -70,18 +70,8 @@ struct AddFoodView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     
                     // Post Button
-                    Button(action: {
-                        // Post logic here
-                    }) {
-                        Text("Post Recipe")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.pink.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top, 10)
+                    
+                    //.padding(.top, 10)
                 }
                 .padding()
             }
@@ -92,12 +82,25 @@ struct AddFoodView: View {
             .navigationTitle("New Recipe")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        // Dismiss action
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Post") {
+                        if let image = selectedImage {
+                            viewModel.addFood(
+                                title: title,
+                                image: image,
+                                instructions: instructions
+                            )
+                        }
                     }
                 }
             }
+//            .toolbar {
+//                ToolbarItem(placement: .cancellationAction) {
+//                    Button("Cancel") {
+//                        // Dismiss action
+//                    }
+//                }
+//            }
         }
     }
 }

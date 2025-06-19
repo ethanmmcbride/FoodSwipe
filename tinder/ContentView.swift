@@ -4,13 +4,14 @@ import SwiftUI
 
 struct ContentView : View {
     @AppStorage("selectedTab") private var selectedTab = "home"
+    @StateObject private var foodViewModel = FoodViewModel()
     var body : some View {
         TabView(selection: $selectedTab) {
             HomeView()
                 .tabItem {
                     Label("Home Page", systemImage: "house.fill")
                 }.tag("home")
-            AddFoodView()
+            AddFoodView(viewModel: foodViewModel)
                 .tabItem {
                     Label("Add Food", systemImage: "fork.knife.circle.fill")
                 }.tag("add")
@@ -26,9 +27,6 @@ struct ContentView : View {
                 }.tag("favorite")
         }
         .tabViewStyle(.sidebarAdaptable)
-        
-        
-        
     }
 }
 
