@@ -1,18 +1,103 @@
 import SwiftUI
+import Foundation
 
-struct Food: Identifiable {
+// Make Food conform to Codable for JSON serialization
+struct Food: Identifiable, Codable {
     let id = UUID()
     var title: String
-    var image: UIImage
+    var imageData: Data // Store image as Data instead of UIImage
     var instructions: String
+    var ingredients: String
+    var calories: String
+    var prepTime: String
+    var category: String
+    var tags: String
+    var dateCreated: Date
+    
+    // Computed property to get UIImage from Data
+    var image: UIImage {
+        return UIImage(data: imageData) ?? UIImage(systemName: "photo")!
+    }
+    
+    // Initialize with UIImage (converts to Data)
+    init(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
+        self.title = title
+        self.imageData = image.jpegData(compressionQuality: 0.8) ?? Data()
+        self.instructions = instructions
+        self.ingredients = ingredients
+        self.calories = calories
+        self.prepTime = prepTime
+        self.category = category
+        self.tags = tags
+        self.dateCreated = Date()
+    }
 }
 
 class FoodViewModel: ObservableObject {
     @Published var foods: [Food] = []
     
-    func addFood(title: String, image: UIImage, instructions: String) {
-        let newFood = Food(title: title, image: image, instructions: instructions)
+    // File URL for storing JSON data
+    private var documentsDirectory: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    
+    private var foodsFileURL: URL {
+        documentsDirectory.appendingPathComponent("foods.json")
+    }
+    
+    init() {
+        loadFoods()
+    }
+    
+    // Add food with all parameters
+    func addFood(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
+        let newFood = Food(
+            title: title,
+            image: image,
+            instructions: instructions,
+            ingredients: ingredients,
+            calories: calories,
+            prepTime: prepTime,
+            category: category,
+            tags: tags
+        )
         foods.append(newFood)
+        saveFoods()
+    }
+    
+    // Save foods to JSON file
+    private func saveFoods() {
+        do {
+            let data = try JSONEncoder().encode(foods)
+            try data.write(to: foodsFileURL)
+            print("Foods saved successfully to: \(foodsFileURL.path)")
+        } catch {
+            print("Failed to save foods: \(error.localizedDescription)")
+        }
+    }
+    
+    // Load foods from JSON file
+    private func loadFoods() {
+        do {
+            let data = try Data(contentsOf: foodsFileURL)
+            foods = try JSONDecoder().decode([Food].self, from: data)
+            print("Foods loaded successfully from: \(foodsFileURL.path)")
+        } catch {
+            print("Failed to load foods: \(error.localizedDescription)")
+            // If file doesn't exist or can't be loaded, start with empty array
+            foods = []
+        }
+    }
+    
+    // Delete a food item
+    func deleteFood(at indexSet: IndexSet) {
+        foods.remove(atOffsets: indexSet)
+        saveFoods()
+    }
+    
+    // Delete a specific food item
+    func deleteFood(_ food: Food) {
+        foods.removeAll { $0.id == food.id }
+        saveFoods()
     }
 }
-
