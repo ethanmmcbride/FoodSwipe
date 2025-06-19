@@ -1,11 +1,10 @@
 import SwiftUI
 import Foundation
 
-// Make Food conform to Codable for JSON serialization
 struct Food: Identifiable, Codable {
     var id = UUID()
     var title: String
-    var imageData: Data // Store image as Data instead of UIImage
+    var imageData: Data
     var instructions: String
     var ingredients: String
     var calories: String
@@ -14,12 +13,12 @@ struct Food: Identifiable, Codable {
     var tags: String
     var dateCreated: Date
     
-    // Computed property to get UIImage from Data
+    // This is here because UIImage isn't compatible with json
     var image: UIImage {
         return UIImage(data: imageData) ?? UIImage(systemName: "photo")!
     }
     
-    // Initialize with UIImage (converts to Data)
+    // Initialize with UIImage --> converts to type Data
     init(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
         self.title = title
         self.imageData = image.jpegData(compressionQuality: 0.8) ?? Data()
