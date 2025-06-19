@@ -10,6 +10,8 @@ struct AddFoodView: View {
     @State private var tags = ""
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     @ObservedObject var viewModel: FoodViewModel
     
     let categories = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]
@@ -38,25 +40,31 @@ struct AddFoodView: View {
                         showImagePicker = true
                     }
 
-                    
                     // Form Fields
                     Group {
                         TextField("Recipe Title", text: $title)
-                        TextEditor(text: $ingredients)
-                            .frame(height: 80)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                            .padding(.top, -10)
-                            
                         
-                        TextEditor(text: $instructions)
-                            .frame(height: 100)
-                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                            .padding(.top, -10)
-                            
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Ingredients")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            TextEditor(text: $ingredients)
+                                .frame(height: 80)
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Instructions")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            TextEditor(text: $instructions)
+                                .frame(height: 100)
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
+                        }
                         
                         TextField("Calories", text: $calories)
                             .keyboardType(.numberPad)
-                        TextField("Prep Time", text: $prepTime)
+                        TextField("Prep Time (e.g., 30 minutes)", text: $prepTime)
                         
                         Picker("Category", selection: $selectedCategory) {
                             ForEach(categories, id: \.self) { category in
@@ -65,43 +73,66 @@ struct AddFoodView: View {
                         }
                         .pickerStyle(MenuPickerStyle())
                         
-                        TextField("Tags", text: $tags)
+                        TextField("Tags (comma separated)", text: $tags)
                     }
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
-                    // Post Button
-                    
-                    //.padding(.top, 10)
                 }
                 .padding()
             }
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(image: $selectedImage)
             }
-
+            .alert("Recipe", isPresented: $showAlert) {
+                Button("OK") { }
+            } message: {
+                Text(alertMessage)
+            }
             .navigationTitle("New Recipe")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
-                        if let image = selectedImage {
-                            viewModel.addFood(
-                                title: title,
-                                image: image,
-                                instructions: instructions
-                            )
-                        }
+                        postRecipe()
                     }
+                    .disabled(title.isEmpty || selectedImage == nil)
                 }
             }
-//            .toolbar {
-//                ToolbarItem(placement: .cancellationAction) {
-//                    Button("Cancel") {
-//                        // Dismiss action
-//                    }
-//                }
-//            }
         }
     }
+    
+    private func postRecipe() {
+        guard !title.isEmpty, let image = selectedImage else {
+            alertMessage = "Please provide a title and image for your recipe."
+            showAlert = true
+            return
+        }
+        
+        viewModel.addFood(
+            title: title,
+            image: image,
+            instructions: instructions,
+            ingredients: ingredients,
+            calories: calories,
+            prepTime: prepTime,
+            category: selectedCategory,
+            tags: tags
+        )
+        
+        // Clear form after successful post
+        clearForm()
+        
+        alertMessage = "Recipe posted successfully!"
+        showAlert = true
+    }
+    
+    private func clearForm() {
+        title = ""
+        ingredients = ""
+        instructions = ""
+        calories = ""
+        prepTime = ""
+        selectedCategory = "Dinner"
+        tags = ""
+        selectedImage = nil
+    }
 }
-

@@ -3,7 +3,7 @@ import Foundation
 
 // Make Food conform to Codable for JSON serialization
 struct Food: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     var title: String
     var imageData: Data // Store image as Data instead of UIImage
     var instructions: String
