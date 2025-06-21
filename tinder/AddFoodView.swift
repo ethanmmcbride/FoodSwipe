@@ -17,88 +17,104 @@ struct AddFoodView: View {
     let categories = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Image
-                    ZStack {
-                        if let uiImage = selectedImage {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                        } else {
-                            Color.gray.opacity(0.2)
-                            Image(systemName: "photo")
-                                .font(.largeTitle)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .frame(height: 200)
-                    .clipped()
-                    .cornerRadius(12)
-                    .onTapGesture {
-                        showImagePicker = true
-                    }
-
-                    // Form Fields
-                    Group {
-                        TextField("Recipe Title", text: $title)
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Ingredients")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextEditor(text: $ingredients)
-                                .frame(height: 80)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Instructions")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextEditor(text: $instructions)
-                                .frame(height: 100)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                        }
-                        
-                        TextField("Calories", text: $calories)
-                            .keyboardType(.numberPad)
-                        TextField("Prep Time (e.g., 30 minutes)", text: $prepTime)
-                        
-                        Picker("Category", selection: $selectedCategory) {
-                            ForEach(categories, id: \.self) { category in
-                                Text(category)
+        ZStack {
+            Color.clear
+            NavigationView {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Image
+                        ZStack {
+                            if let uiImage = selectedImage {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                            } else {
+                                Color.gray.opacity(0.2)
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.gray)
                             }
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        
-                        TextField("Tags (comma separated)", text: $tags)
+                        .frame(height: 200)
+                        .clipped()
+                        .cornerRadius(12)
+                        .onTapGesture {
+                            showImagePicker = true
+                        }
+
+                        // Form Fields
+                        Group {
+                            TextField("Recipe Title", text: $title)
+                                .customTextField()
+                            
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("Ingredients")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                TextEditor(text: $ingredients)
+                                    .scrollContentBackground(.hidden)
+                                    .background(Color.pink.opacity(0.15))
+                                    .cornerRadius(8)
+                                    .frame(minHeight: 100)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(4)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("Instructions")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                TextEditor(text: $instructions)
+                                    .scrollContentBackground(.hidden)
+                                    .background(Color.pink.opacity(0.15))
+                                    .cornerRadius(8)
+                                    .frame(minHeight: 100)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(4)
+                                
+                            }
+                            
+                            TextField("Calories", text: $calories)
+                                .keyboardType(.numberPad)
+                                .customTextField()
+                            TextField("Prep Time (e.g., 30 minutes)", text: $prepTime)
+                                .customTextField()
+                            
+                            Picker("Category", selection: $selectedCategory) {
+                                ForEach(categories, id: \.self) { category in
+                                    Text(category)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            
+                            TextField("Tags (comma separated)", text: $tags)
+                                .customTextField()
+                        }
                     }
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                }.applyGradientBackground()
+                .sheet(isPresented: $showImagePicker) {
+                    ImagePicker(image: $selectedImage)
                 }
-                .padding()
-            }
-            .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: $selectedImage)
-            }
-            .alert("Recipe", isPresented: $showAlert) {
-                Button("OK") { }
-            } message: {
-                Text(alertMessage)
-            }
-            .navigationTitle("New Recipe")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Post") {
-                        postRecipe()
+                .alert("Recipe", isPresented: $showAlert) {
+                    Button("OK") { }
+                } message: {
+                    Text(alertMessage)
+                }
+                .navigationTitle("New Recipe")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Post") {
+                            postRecipe()
+                        }
+                        .disabled(title.isEmpty || selectedImage == nil)
                     }
-                    .disabled(title.isEmpty || selectedImage == nil)
                 }
             }
         }
     }
+        
     
     private func postRecipe() {
         guard !title.isEmpty, let image = selectedImage else {

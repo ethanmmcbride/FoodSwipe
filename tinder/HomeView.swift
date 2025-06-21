@@ -10,14 +10,7 @@ struct HomeView: View {
     private let timer = Timer.publish(every: 2.5, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        ZStack { // background color; goes first on the "stack"
-            LinearGradient(
-                gradient: Gradient(colors: [.pink.opacity(0.3), .blue.opacity(0.35)]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-            
+        ZStack {
             VStack(spacing: 30) {
                 //Spacer()
                 Text("Welcome to FoodSwipe!")
@@ -80,5 +73,6 @@ struct HomeView: View {
             
             
         }
+        .applyGradientBackground()
     }
 }

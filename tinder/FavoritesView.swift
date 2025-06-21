@@ -2,6 +2,14 @@ import SwiftUI
 
 struct FavoritesView : View {
     var body : some View {
-        Text("❤️ Favorites")
+        ZStack{
+            VStack {
+                Text("❤️ Favorites")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .applyGradientBackground()
+        .ignoresSafeArea()
     }
+    
 }

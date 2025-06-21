@@ -117,7 +117,7 @@ struct SwipeView: View {
                     }
                     .padding()
                 }
-            }
+            }.scrollContentBackground(.hidden)
             .navigationTitle("Recipe Test")
             .refreshable {
                 // Force reload data
