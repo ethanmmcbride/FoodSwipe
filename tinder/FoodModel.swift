@@ -1,6 +1,7 @@
 import SwiftUI
 import Foundation
 
+
 struct Food: Identifiable, Codable {
     var id = UUID()
     var title: String
@@ -12,6 +13,7 @@ struct Food: Identifiable, Codable {
     var category: String
     var tags: String
     var dateCreated: Date
+    
     
     // This is here because UIImage isn't compatible with json
     var image: UIImage {
@@ -34,6 +36,10 @@ struct Food: Identifiable, Codable {
 
 class FoodViewModel: ObservableObject {
     @Published var foods: [Food] = []
+    static let predefinedTags: [String] = [
+        "Organic", "Low-Cal", "Gluten-Free"
+    ]
+
     
     // File URL for storing JSON data
     private var documentsDirectory: URL {
