@@ -25,6 +25,11 @@ struct ContentView : View {
                 .tabItem {
                     Label("Favorites", systemImage: "heart")
                 }.tag("favorite")
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person")
+                }.tag("profile")
         }
         .tabViewStyle(.sidebarAdaptable)
     }
