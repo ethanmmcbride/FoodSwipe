@@ -37,7 +37,7 @@ struct Food: Identifiable, Codable {
 class FoodViewModel: ObservableObject {
     @Published var foods: [Food] = []
     static let predefinedTags: [String] = [
-        "Organic", "Low-Cal", "Gluten-Free"
+        "Organic", "Low-Calorie", "Gluten-Free"
     ]
 
     
@@ -105,4 +105,10 @@ class FoodViewModel: ObservableObject {
         foods.removeAll { $0.id == food.id }
         saveFoods()
     }
+    func clearAllFoods() {
+        foods.removeAll()
+        saveFoods()
+    }
 }
+
+
