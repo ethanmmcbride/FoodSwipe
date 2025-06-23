@@ -21,10 +21,10 @@ struct ContentView : View {
                     Label("Swipe", systemImage: "hand.draw")
                 }.tag("swipe")
             
-            FavoritesView()
+            ProfileView()
                 .tabItem {
-                    Label("Favorites", systemImage: "heart")
-                }.tag("favorite")
+                    Label("Profile", systemImage: "person")
+                }.tag("profile")
         }
         .tabViewStyle(.sidebarAdaptable)
     }
