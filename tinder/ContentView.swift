@@ -21,11 +21,6 @@ struct ContentView : View {
                     Label("Swipe", systemImage: "hand.draw")
                 }.tag("swipe")
             
-            FavoritesView()
-                .tabItem {
-                    Label("Favorites", systemImage: "heart")
-                }.tag("favorite")
-            
             ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person")
