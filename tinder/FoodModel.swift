@@ -53,7 +53,7 @@ class FoodViewModel: ObservableObject {
     init() {
         loadFoods()
         if foods.isEmpty {
-            foods = dummyFoods
+            foods = DummyData.foods
             saveFoods()
         }
     }
@@ -114,5 +114,4 @@ class FoodViewModel: ObservableObject {
         saveFoods()
     }
 }
-
 

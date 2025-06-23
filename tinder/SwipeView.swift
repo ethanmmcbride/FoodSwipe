@@ -162,37 +162,4 @@ struct SwipeView: View {
     }
 }
 
-struct FilterSheetView: View {
-    @Binding var selectedFilters: Set<String>
-    @Environment(\.dismiss) var dismiss
-    let availableTags = ["Organic", "Low-Calorie", "Gluten-Free"]
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Filter Recipes")) {
-                    ForEach(availableTags, id: \.self) { tag in
-                        Toggle(tag, isOn: Binding(
-                            get: { selectedFilters.contains(tag)},
-                            // will add the tag to the filter if the user toggles it on.
-                            set: {isOn in
-                                if isOn {
-                                    selectedFilters.insert(tag)
-                                } else { // if toggled off, remove the tag.
-                                    selectedFilters.remove(tag)
-                                }
-                            }
-                        ))
-                    }
-                }
-            }
-            .navigationTitle("Filters")
-            // Done button lets the user exit out of the filter.
-            .navigationBarItems(trailing: Button("Done") {
-                // dismisses the sheet.
-                dismiss()
-            })
-            
-        }
-    }
-}
+
