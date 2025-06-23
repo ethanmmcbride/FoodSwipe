@@ -52,6 +52,10 @@ class FoodViewModel: ObservableObject {
     
     init() {
         loadFoods()
+        if foods.isEmpty {
+            foods = dummyFoods
+            saveFoods()
+        }
     }
     
     // Add food with all parameters

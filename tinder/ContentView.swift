@@ -1,7 +1,5 @@
 import SwiftUI
 
-
-
 struct ContentView : View {
     @AppStorage("selectedTab") private var selectedTab = "home"
     @StateObject private var foodViewModel = FoodViewModel()

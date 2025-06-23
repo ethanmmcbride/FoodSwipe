@@ -1,19 +1,5 @@
 import SwiftUI
 
-// Some dummy data down below.
-let dummyFoods: [Food] = [
-    Food(
-        title: "Spaghetti Carbonara",
-        image: UIImage(named: "MealNumberOne") ?? UIImage(systemName: "photo")!,
-        instructions: "1. Boil pasta.\n2. Fry Bacon.\n3. Mix with eggs, cheese, and black pepper.\n4. Combine all ingredients and serve hot.",
-        ingredients: "Spaghetti, Eggs, Bacon, Cheese, Black pepper.",
-        calories: "550",
-        prepTime: "30 minutes",
-        category: "Dinner",
-        tags: "Organic"
-    )
-]
-
 struct SwipeView: View {
     @StateObject private var foodViewModel = FoodViewModel()
     @State private var showFilterSheet = false // When the user selects the Filter button, this variable will change to 'true'.
