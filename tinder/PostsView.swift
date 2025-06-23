@@ -134,7 +134,7 @@ struct PostsView: View {
                     
                 }
             }.scrollContentBackground(.hidden)
-            .navigationTitle("Recipe Test")
+            .navigationTitle("My Recipes")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
