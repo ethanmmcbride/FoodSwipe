@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @AppStorage("selectedTab") private var selectedTab = "home"
+    @Binding var selectedTab: Tab
     @State private var animate = false
     
     @State private var currentImage = 0
@@ -30,7 +30,7 @@ struct HomeView: View {
                         animate = true
                     }
                 Button(action: {
-                    selectedTab = "swipe"
+                    selectedTab = .swipe
                 }) {
                     Text("Start Swiping")
                         .padding()
@@ -56,6 +56,7 @@ struct HomeView: View {
                     .cornerRadius(15)
                     .padding(.bottom, 50)
                     .opacity(fadeIn ? 1 : 0)
+                    .offset(y: -68)
                     .animation(.easeInOut(duration: 1),  value: fadeIn)
                     .onReceive(timer) { _ in
                         fadeIn = false
@@ -68,7 +69,7 @@ struct HomeView: View {
                         fadeIn = true
                     }
                 
-            }
+            }.frame(maxHeight: .infinity)
             
             
             

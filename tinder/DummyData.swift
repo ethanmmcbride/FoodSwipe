@@ -1,7 +1,6 @@
 import Foundation
 import SwiftUI
 
-<<<<<<< HEAD
 let dummyFoodsData: [Food] = [
     Food(
         title: "Spaghetti Carbonara",
@@ -74,7 +73,6 @@ let dummyFoodsData: [Food] = [
         tags: "Gluten-Free, Organic"
     )
 ]
-=======
 
 struct DummyData {
     
@@ -112,4 +110,4 @@ struct DummyData {
         )
     ]
 }
->>>>>>> main
+

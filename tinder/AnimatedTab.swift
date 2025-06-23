@@ -15,7 +15,7 @@ struct AnimatedTabBar: View {
             ZStack {
                 switch selectedTab {
                 case .home:
-                    HomeView()
+                    HomeView(selectedTab: $selectedTab)
                         .transition(.opacity.combined(with: .move(edge: .leading)))
                 case .add:
                     AddFoodView(viewModel: foodViewModel)
@@ -24,7 +24,7 @@ struct AnimatedTabBar: View {
                     SwipeView()
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
                 case .profile:
-                    ProfileView()
+                    ProfileView(viewModel: foodViewModel)
                         .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
