@@ -54,19 +54,17 @@ class FoodViewModel: ObservableObject {
     }
     
     init() {
-<<<<<<< HEAD
         loadDummyFoods()
     }
     
     func loadDummyFoods() {
         dummyFoods = dummyFoodsData
-=======
+
         loadFoods()
         if foods.isEmpty {
             foods = DummyData.foods
             saveFoods()
         }
->>>>>>> main
     }
     
     // Add food with all parameters
