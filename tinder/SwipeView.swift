@@ -57,6 +57,8 @@ struct SwipeView: View {
 struct RecipeCardView: View {
     let food: Food
     let totalRecipes: Int
+    @State private var isLiked = false
+    @State private var isDisliked = false
             
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -66,6 +68,27 @@ struct RecipeCardView: View {
                 .frame(height: 250)
                 .clipped()
                 .cornerRadius(12)
+            
+            HStack {
+                Button(action: {
+                    print("Disliked: \(food.title)")
+                    isDisliked.toggle()
+                    if isDisliked { isLiked = false }
+                }) {
+                    Label("Dislike", systemImage: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                        .foregroundColor(isDisliked ? .red : .gray)
+                }
+                Spacer()
+                Button(action: {
+                    print("Liked: \(food.title)")
+                    isLiked.toggle()
+                    if isLiked { isDisliked = false }
+                }) {
+                    Label("Like", systemImage: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        .foregroundColor(isLiked ? .blue : .gray)
+                    }
+            }
+            .padding(.horizontal, 100)
             
             Text(food.title) // Title
                 .font(.title)
@@ -153,7 +176,7 @@ struct RecipeCardView: View {
         }
         .padding()
     }
-    }
+}
 
             
 
