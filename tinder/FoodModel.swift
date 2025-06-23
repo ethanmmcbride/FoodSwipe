@@ -118,9 +118,6 @@ class FoodViewModel: ObservableObject {
         userFoods.removeAll { $0.id == food.id }
         saveFoods()
     }
-//    func clearAllFoods() {
-//        userFoods.removeAll()
-//        saveFoods()
-//    }
+
 }
 
