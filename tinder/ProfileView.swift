@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @ObservedObject var viewModel: FoodViewModel
     @State private var selectedTab: ProfileTab = .posts
     
     enum ProfileTab {
@@ -45,7 +46,7 @@ struct ProfileView: View {
             Group {
                 switch selectedTab {
                 case .posts:
-                    PostsView()
+                    PostsView(userFoods: viewModel.userFoods)
                 case .favorites:
                     FavoritesView()
                 }

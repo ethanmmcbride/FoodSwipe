@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import Foundation
 
 
@@ -13,6 +14,7 @@ struct Food: Identifiable, Codable {
     var category: String
     var tags: String
     var dateCreated: Date
+
     
     
     // This is here because UIImage isn't compatible with json
@@ -35,7 +37,8 @@ struct Food: Identifiable, Codable {
 }
 
 class FoodViewModel: ObservableObject {
-    @Published var foods: [Food] = []
+    @Published var dummyFoods: [Food] = []
+    @Published var userFoods: [Food] = []
     static let predefinedTags: [String] = [
         "Organic", "Low-Calorie", "Gluten-Free"
     ]
@@ -51,11 +54,11 @@ class FoodViewModel: ObservableObject {
     }
     
     init() {
-        loadFoods()
-        if foods.isEmpty {
-            foods = dummyFoods
-            saveFoods()
-        }
+        loadDummyFoods()
+    }
+    
+    func loadDummyFoods() {
+        dummyFoods = dummyFoodsData
     }
     
     // Add food with all parameters
@@ -70,14 +73,14 @@ class FoodViewModel: ObservableObject {
             category: category,
             tags: tags
         )
-        foods.append(newFood)
+        userFoods.append(newFood)
         saveFoods()
     }
     
     // Save foods to JSON file
     private func saveFoods() {
         do {
-            let data = try JSONEncoder().encode(foods)
+            let data = try JSONEncoder().encode(userFoods)
             try data.write(to: foodsFileURL)
             print("Foods saved successfully to: \(foodsFileURL.path)")
         } catch {
@@ -89,30 +92,30 @@ class FoodViewModel: ObservableObject {
     private func loadFoods() {
         do {
             let data = try Data(contentsOf: foodsFileURL)
-            foods = try JSONDecoder().decode([Food].self, from: data)
+            userFoods = try JSONDecoder().decode([Food].self, from: data)
             print("Foods loaded successfully from: \(foodsFileURL.path)")
         } catch {
             print("Failed to load foods: \(error.localizedDescription)")
             // If file doesn't exist or can't be loaded, start with empty array
-            foods = []
+            userFoods = []
         }
     }
     
     // Delete a food item
     func deleteFood(at indexSet: IndexSet) {
-        foods.remove(atOffsets: indexSet)
+        userFoods.remove(atOffsets: indexSet)
         saveFoods()
     }
     
     // Delete a specific food item
     func deleteFood(_ food: Food) {
-        foods.removeAll { $0.id == food.id }
+        userFoods.removeAll { $0.id == food.id }
         saveFoods()
     }
-    func clearAllFoods() {
-        foods.removeAll()
-        saveFoods()
-    }
+//    func clearAllFoods() {
+//        userFoods.removeAll()
+//        saveFoods()
+//    }
 }
 
 

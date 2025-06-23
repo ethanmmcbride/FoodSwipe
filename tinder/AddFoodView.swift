@@ -15,6 +15,8 @@ struct AddFoodView: View {
     @State private var selectedTags: Set<String> = []
     @ObservedObject var viewModel: FoodViewModel
     
+    
+    
     let categories = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]
     
     var body: some View {

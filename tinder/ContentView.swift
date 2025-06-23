@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView : View {
     @AppStorage("selectedTab") private var selectedTab = "home"
-    @StateObject private var foodViewModel = FoodViewModel()
+    @StateObject var foodViewModel = FoodViewModel()
     var body : some View {
         TabView(selection: $selectedTab) {
             HomeView()
@@ -19,7 +19,7 @@ struct ContentView : View {
                     Label("Swipe", systemImage: "hand.draw")
                 }.tag("swipe")
             
-            ProfileView()
+            ProfileView(viewModel: foodViewModel)
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }.tag("profile")

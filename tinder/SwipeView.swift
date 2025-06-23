@@ -6,7 +6,7 @@ struct SwipeView: View {
     @State private var selectedFilters: Set<String> = [] // this variable is for the filtration system on the Swipe tab.
     
     var filteredFoods: [Food] {
-        foodViewModel.foods.filter { food in
+        foodViewModel.dummyFoods.filter { food in
             let tagList = food.tags
             // removes extra spaces and splits the tags into an array
                 .components(separatedBy: ",")
@@ -19,119 +19,18 @@ struct SwipeView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                if foodViewModel.foods.isEmpty {
-                    VStack(spacing: 20) {
-                        Image(systemName: "fork.knife.circle")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        Text("No recipes saved yet!")
-                            .font(.title2)
-                            .foregroundColor(.secondary)
-                        Text("Add some recipes in the Add Food tab to see them here.")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
+                if filteredFoods.isEmpty {
+                    Text("No recipes match your selected filters!")
+                        .foregroundColor(.secondary)
                 } else {
-                    // loops through each meal and finds if the meal matches the user's selected tags
                     ForEach(filteredFoods, id: \.id) { food in
-                        VStack(alignment: .leading, spacing: 16) {
-                            Image(uiImage: food.image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 250)
-                                .clipped()
-                                .cornerRadius(12)
-                            
-                            Text(food.title) // Title
-                                .font(.title)
-                                .fontWeight(.bold)
-                            
-                            HStack { // Category and Date
-                                Text(food.category)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.blue.opacity(0.2))
-                                    .cornerRadius(8)
-                                    .font(.caption)
-                                
-                                Spacer()
-                                
-                                Text(food.dateCreated, style: .date)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            HStack { // Stats
-                                if !food.calories.isEmpty {
-                                    Label(food.calories + " cal", systemImage: "flame")
-                                        .font(.caption)
-                                        .foregroundColor(.orange)
-                                }
-                                
-                                if !food.prepTime.isEmpty {
-                                    Label(food.prepTime, systemImage: "clock")
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                }
-                            }
-                            
-                            if !food.ingredients.isEmpty { // Ingredients
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Ingredients")
-                                        .font(.headline)
-                                    Text(food.ingredients)
-                                        .font(.body)
-                                }
-                            }
-                            
-                            if !food.instructions.isEmpty { // Instructions
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Instructions")
-                                        .font(.headline)
-                                    Text(food.instructions)
-                                        .font(.body)
-                                }
-                            }
-                                                    
-                            if !food.tags.isEmpty { // Tags
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Tags")
-                                        .font(.headline)
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        HStack {
-                                            ForEach(food.tags.components(separatedBy: ","), id: \.self) { tag in
-                                                Text(tag.trimmingCharacters(in: .whitespaces))
-                                                    .padding(.horizontal, 8)
-                                                    .padding(.vertical, 4)
-                                                    .background(Color.gray.opacity(0.2))
-                                                    .cornerRadius(6)
-                                                    .font(.caption)
-                                            }
-                                        }
-                                        .padding(.horizontal)
-                                    }
-                                }
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) { // Debug info
-                                Text("Debug Info")
-                                    .font(.headline)
-                                    .foregroundColor(.secondary)
-                                Text("Total recipes loaded: \(foodViewModel.foods.count)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("Recipe ID: \(food.id.uuidString)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.top)
-                        }
-                        .padding()
+                        RecipeCardView(food: food, totalRecipes: foodViewModel.dummyFoods.count)
+                        
+                        
                     }
-                    
                 }
-            }.scrollContentBackground(.hidden)
+            }
+            .scrollContentBackground(.hidden)
             .navigationTitle("Recipe Test")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -142,13 +41,6 @@ struct SwipeView: View {
                         Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
                     }
                 }
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button(role: .destructive) {
-//                        foodViewModel.clearAllFoods()
-//                    } label: {
-//                        Text("Clear ALL RECIPES!")
-//                    }
-//                }
                 
             }
             .sheet(isPresented: $showFilterSheet) {
@@ -162,16 +54,107 @@ struct SwipeView: View {
     }
 }
 
-struct SwipeView : View {
-    var body : some View {
-        ZStack{
-            VStack {
-                Text("👋 Swipe")
+struct RecipeCardView: View {
+    let food: Food
+    let totalRecipes: Int
+            
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Image(uiImage: food.image)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 250)
+                .clipped()
+                .cornerRadius(12)
+            
+            Text(food.title) // Title
+                .font(.title)
+                .fontWeight(.bold)
+            
+            HStack { // Category and Date
+                Text(food.category)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.blue.opacity(0.2))
+                    .cornerRadius(8)
+                    .font(.caption)
+                
+                Spacer()
+                
+                Text(food.dateCreated, style: .date)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
+            
+            HStack { // Stats
+                if !food.calories.isEmpty {
+                    Label(food.calories + " cal", systemImage: "flame")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
+                
+                if !food.prepTime.isEmpty {
+                    Label(food.prepTime, systemImage: "clock")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                }
+            }
+            
+            if !food.ingredients.isEmpty { // Ingredients
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Ingredients")
+                        .font(.headline)
+                    Text(food.ingredients)
+                        .font(.body)
+                }
+            }
+            
+            if !food.instructions.isEmpty { // Instructions
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Instructions")
+                        .font(.headline)
+                    Text(food.instructions)
+                        .font(.body)
+                }
+            }
+            
+            if !food.tags.isEmpty { // Tags
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Tags")
+                        .font(.headline)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(food.tags.components(separatedBy: ","), id: \.self) { tag in
+                                Text(tag.trimmingCharacters(in: .whitespaces))
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(6)
+                                    .font(.caption)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 4) { // Debug info
+                Text("Debug Info")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                Text("Total recipes loaded: \(totalRecipes)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text("Recipe ID: \(food.id.uuidString)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.top)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .applyGradientBackground()
-        .ignoresSafeArea()
+        .padding()
     }
-    
-}
+    }
+
+            
+
+

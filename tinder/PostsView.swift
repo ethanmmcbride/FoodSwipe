@@ -2,27 +2,13 @@
 
 import SwiftUI
 
-// Some dummy data down below.
-let dummyFoods: [Food] = [
-    Food(
-        title: "Spaghetti Carbonara",
-        image: UIImage(named: "MealNumberOne") ?? UIImage(systemName: "photo")!,
-        instructions: "1. Boil pasta.\n2. Fry Bacon.\n3. Mix with eggs, cheese, and black pepper.\n4. Combine all ingredients and serve hot.",
-        ingredients: "Spaghetti, Eggs, Bacon, Cheese, Black pepper.",
-        calories: "550",
-        prepTime: "30 minutes",
-        category: "Dinner",
-        tags: "Organic"
-    )
-]
-
 struct PostsView: View {
-    @StateObject private var foodViewModel = FoodViewModel()
+    var userFoods: [Food]
     @State private var showFilterSheet = false // When the user selects the Filter button, this variable will change to 'true'.
     @State private var selectedFilters: Set<String> = [] // this variable is for the filtration system on the Swipe tab.
     
     var filteredFoods: [Food] {
-        foodViewModel.foods.filter { food in
+        userFoods.filter { food in
             let tagList = food.tags
             // removes extra spaces and splits the tags into an array
                 .components(separatedBy: ",")
@@ -35,7 +21,7 @@ struct PostsView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                if foodViewModel.foods.isEmpty {
+                if userFoods.isEmpty {
                     VStack(spacing: 20) {
                         Image(systemName: "fork.knife.circle")
                             .font(.system(size: 60))
@@ -134,7 +120,7 @@ struct PostsView: View {
                                 Text("Debug Info")
                                     .font(.headline)
                                     .foregroundColor(.secondary)
-                                Text("Total recipes loaded: \(foodViewModel.foods.count)")
+                                Text("Total recipes loaded: \(userFoods.count)")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text("Recipe ID: \(food.id.uuidString)")
@@ -170,10 +156,10 @@ struct PostsView: View {
             .sheet(isPresented: $showFilterSheet) {
                 FilterSheetView(selectedFilters: $selectedFilters)
             } // refreshes data
-            .refreshable {
-                // Force reload data
-                foodViewModel.objectWillChange.send()
-            }
+//            .refreshable {
+//                // Force reload data
+//                foodViewModel.objectWillChange.send()
+//            }
         }
     }
 }
