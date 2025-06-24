@@ -73,6 +73,7 @@ struct RecipeCardView: View {
                 Button(action: {
                     print("Disliked: \(food.title)")
                     isDisliked.toggle()
+                    // if the dislike button is clicked, then the isLiked var is assigned a false value.
                     if isDisliked { isLiked = false }
                 }) {
                     Label("Dislike", systemImage: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
@@ -82,6 +83,7 @@ struct RecipeCardView: View {
                 Button(action: {
                     print("Liked: \(food.title)")
                     isLiked.toggle()
+                    // if the like button is clicked, then the isDisliked var is assigned a false value.
                     if isLiked { isDisliked = false }
                 }) {
                     Label("Like", systemImage: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
