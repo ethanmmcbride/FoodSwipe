@@ -219,7 +219,7 @@ struct RecipeCardView: View {
         }
         .padding()
         .offset(x: shake)
-        .onChange(of: food.id) { _ in
+        .onChange(of: food.id) { _, _ in
             isLiked = false
             isDisliked = false
         }
