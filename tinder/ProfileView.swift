@@ -56,4 +56,3 @@ struct ProfileView: View {
         .ignoresSafeArea(.all, edges: .bottom)
     }
 }
-

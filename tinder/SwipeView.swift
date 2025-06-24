@@ -4,6 +4,7 @@ struct SwipeView: View {
     @StateObject private var foodViewModel = FoodViewModel()
     @State private var showFilterSheet = false // When the user selects the Filter button, this variable will change to 'true'.
     @State private var selectedFilters: Set<String> = [] // this variable is for the filtration system on the Swipe tab.
+    @State private var currIndex = 0;
     
     var filteredFoods: [Food] {
         foodViewModel.dummyFoods.filter { food in
@@ -20,28 +21,34 @@ struct SwipeView: View {
         NavigationView {
             ScrollView {
                 if filteredFoods.isEmpty {
-                    Text("No recipes match your selected filters!")
-                        .foregroundColor(.secondary)
+                    Text("No recipes found. Try changing your filters.")
+                        .foregroundStyle(.secondary)
+                } else if currIndex < filteredFoods.count {
+                    RecipeCardView(
+                        food: filteredFoods[currIndex],
+                        totalRecipes: foodViewModel.dummyFoods.count,
+                        onSwipe: {
+                            if currIndex + 1 < filteredFoods.count {
+                                currIndex += 1
+                            }
+                        }
+                    )
                 } else {
-                    ForEach(filteredFoods, id: \.id) { food in
-                        RecipeCardView(food: food, totalRecipes: foodViewModel.dummyFoods.count)
-                        
-                        
-                    }
+                    Text("No more recipes to show!")
                 }
             }
             .scrollContentBackground(.hidden)
             .navigationTitle("Recipe Test")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // changes filter sheet var to 'true' when button is pressed.
-                        showFilterSheet = true
-                    }) {
-                        Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                            showFilterSheet = true
+                        }) {
+                            Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                        }
                     }
-                }
-                
+                        
             }
             .sheet(isPresented: $showFilterSheet) {
                 FilterSheetView(selectedFilters: $selectedFilters)
@@ -53,13 +60,33 @@ struct SwipeView: View {
         }
     }
 }
-
+    
 struct RecipeCardView: View {
     let food: Food
     let totalRecipes: Int
+    let onSwipe: () -> Void
     @State private var isLiked = false
     @State private var isDisliked = false
-            
+    @State private var shake: CGFloat = 0
+    //
+    
+    // Function To Trigger the "Shake":
+    func triggerShake(completion: @escaping ()  -> Void) {
+        withAnimation(.default) {
+            shake = 10
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            withAnimation(.default) {
+                shake = -10
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.default) {
+                shake = 0
+            }
+            completion() // will switch to the next recipe after the button is finished shaking.
+        }
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Image(uiImage: food.image)
@@ -73,7 +100,16 @@ struct RecipeCardView: View {
                 Button(action: {
                     print("Disliked: \(food.title)")
                     isDisliked.toggle()
+                    // if the dislike button is clicked, then the isLiked var is assigned a false value.
                     if isDisliked { isLiked = false }
+                    // TRIGGERED SHAKE AND SWIPE!
+                    triggerShake {
+                        // the dispatch call will give the button some time to shake properly.
+                        DispatchQueue.main.asyncAfter(deadline: .now() +  0.3) {
+                            onSwipe()
+                        }
+                        
+                    }
                 }) {
                     Label("Dislike", systemImage: isDisliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .foregroundColor(isDisliked ? .red : .gray)
@@ -82,11 +118,18 @@ struct RecipeCardView: View {
                 Button(action: {
                     print("Liked: \(food.title)")
                     isLiked.toggle()
+                    // if the like button is clicked, then the isDisliked var is assigned a false value.
                     if isLiked { isDisliked = false }
+                    // TRIGGERED SHAKE AND SWIPE!
+                    triggerShake {
+                        DispatchQueue.main.asyncAfter(deadline: .now() +  0.3) {
+                            onSwipe()
+                        }
+                    }
                 }) {
                     Label("Like", systemImage: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
                         .foregroundColor(isLiked ? .blue : .gray)
-                    }
+                }
             }
             .padding(.horizontal, 100)
             
@@ -175,9 +218,16 @@ struct RecipeCardView: View {
             .padding(.top)
         }
         .padding()
+        .offset(x: shake)
+        .onChange(of: food.id) { _ in
+            isLiked = false
+            isDisliked = false
+        }
     }
+    
 }
 
-            
-
+    
+    
+    
 
