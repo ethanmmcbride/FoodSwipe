@@ -68,6 +68,7 @@ struct RecipeCardView: View {
     @State private var isLiked = false
     @State private var isDisliked = false
     @State private var shake: CGFloat = 0
+    @StateObject private var foodViewModel = FoodViewModel()
     //
     
     // Function To Trigger the "Shake":
@@ -119,7 +120,8 @@ struct RecipeCardView: View {
                     print("Liked: \(food.title)")
                     isLiked.toggle()
                     // if the like button is clicked, then the isDisliked var is assigned a false value.
-                    if isLiked { isDisliked = false }
+                    if isLiked { isDisliked = false
+                        foodViewModel.addToFavorites(food)}
                     // TRIGGERED SHAKE AND SWIPE!
                     triggerShake {
                         DispatchQueue.main.asyncAfter(deadline: .now() +  0.3) {

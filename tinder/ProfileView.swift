@@ -48,7 +48,7 @@ struct ProfileView: View {
                 case .posts:
                     PostsView(userFoods: viewModel.userFoods)
                 case .favorites:
-                    FavoritesView()
+                    FavoritesView(viewModel: viewModel)  // Add viewModel parameter
                 }
             }
             .frame(maxHeight: .infinity)

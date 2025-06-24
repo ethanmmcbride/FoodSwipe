@@ -39,10 +39,11 @@ struct Food: Identifiable, Codable {
 class FoodViewModel: ObservableObject {
     @Published var dummyFoods: [Food] = []
     @Published var userFoods: [Food] = []
+    @Published var likedFoods: [Food] = []
     static let predefinedTags: [String] = [
         "Organic", "Low-Calorie", "Gluten-Free"
     ]
-
+    
     
     // File URL for storing JSON data
     private var documentsDirectory: URL {
@@ -59,12 +60,28 @@ class FoodViewModel: ObservableObject {
     
     func loadDummyFoods() {
         dummyFoods = dummyFoodsData
-
+        
         loadFoods()
         if dummyFoods.isEmpty {
             dummyFoods = DummyData.foods
             saveFoods()
         }
+    }
+    
+    func addToFavorites(_ food: Food) {
+        if !likedFoods.contains(where: { $0.id == food.id }) {
+            likedFoods.append(food)
+        }
+    }
+    func removeFavorite(_ food: Food) {
+        withAnimation(.spring()) {
+            likedFoods.removeAll { $0.id == food.id }
+        }
+    }
+    
+    // Check if a food is favorited
+    func isFavorited(_ food: Food) -> Bool {
+        return likedFoods.contains(where: { $0.id == food.id })
     }
     
     // Add food with all parameters
@@ -118,6 +135,5 @@ class FoodViewModel: ObservableObject {
         userFoods.removeAll { $0.id == food.id }
         saveFoods()
     }
-
+    
 }
-
