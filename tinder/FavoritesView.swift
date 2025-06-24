@@ -97,12 +97,9 @@ struct FavoriteRecipeItemView: View {
                 HStack(spacing: 8) {
                     if !food.calories.isEmpty {
                         HStack(spacing: 2) {
-                            Image(systemName: "flame.fill")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                            Text(food.calories)
-                                .font(.caption)
-                                .foregroundColor(.white.opacity(0.7))
+                                Label(food.calories + " cal", systemImage: "flame")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
                         }
                     }
                     

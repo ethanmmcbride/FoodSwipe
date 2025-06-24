@@ -187,6 +187,11 @@ struct RecipePinView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
+                        if !recipe.calories.isEmpty {
+                            Label(recipe.calories + " cal", systemImage: "flame")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                        }
                     }
                     
                     Spacer()
