@@ -38,7 +38,7 @@ struct SwipeView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .navigationTitle("Recipe Test")
+            .navigationTitle("Swipe")
             .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
