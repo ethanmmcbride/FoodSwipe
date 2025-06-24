@@ -97,6 +97,7 @@ struct AddFoodView: View {
                 .padding()
                 //.frame(minHeight: 100)
                 .frame(maxWidth: .infinity)
+                .padding(.bottom, 200)
 
             }
             .applyGradientBackground()
