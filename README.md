@@ -15,7 +15,9 @@ Many people want healthier food options, but they often face three barriers: lac
 
 # Specifications
 1. The user must be able to compare food options based on clear nutritional information, such as calories and nutritional content.
-2. The user should be able to find their desired recipe in 2 minutes or less.
+2. The user must be able to find their desired recipe in 2 minutes or less.
+3. The user must be able to filter or sort food options by dietary needs (ex. low-cal, organic, or gluten-free)
+4. The user must be able to add their own recipe for others to view
 
 # Solution
 We are building a social app that allows users to swipe through low-calorie, gluten-free, organic meals. They are able to like their favorite recipe and keep it safe in their profile. They are also able to upload their own recipes and show off their own creations. The app is fast and fun – a Tinder-style app, but instead of matching with dates, you'll be matching with your favorite recipe to try!
