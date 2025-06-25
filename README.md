@@ -5,6 +5,7 @@ Many people want healthier food options, but they often face three barriers: lac
 
 # Stakeholder map
 <img width="625" alt="Screenshot 2025-06-24 at 9 36 59 AM" src="https://github.com/user-attachments/assets/9f1217b2-61e2-45cf-b535-60815c4eedaf" />
+![Screenshot 2025-06-25 at 12 13 02 AM](https://github.com/user-attachments/assets/6187e564-d143-45a7-9883-55240cec729b)
 
 # Requirements
 1. Time-efficient and user-friendly
