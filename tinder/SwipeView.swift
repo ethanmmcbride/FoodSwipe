@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct SwipeView: View {
-    @StateObject private var foodViewModel = FoodViewModel()
+    @ObservedObject var viewModel: FoodViewModel
     @State private var showFilterSheet = false // When the user selects the Filter button, this variable will change to 'true'.
     @State private var selectedFilters: Set<String> = [] // this variable is for the filtration system on the Swipe tab.
     @State private var currIndex = 0;
     
     var filteredFoods: [Food] {
-        foodViewModel.dummyFoods.filter { food in
+        viewModel.dummyFoods.filter { food in
             let tagList = food.tags
             // removes extra spaces and splits the tags into an array
                 .components(separatedBy: ",")
@@ -26,12 +26,13 @@ struct SwipeView: View {
                 } else if currIndex < filteredFoods.count {
                     RecipeCardView(
                         food: filteredFoods[currIndex],
-                        totalRecipes: foodViewModel.dummyFoods.count,
+                        totalRecipes: viewModel.dummyFoods.count,
                         onSwipe: {
                             if currIndex < filteredFoods.count {
                                 currIndex += 1
                             }
-                        }
+                        },
+                        viewModel: viewModel
                     )
                 } else {
                     VStack {
@@ -62,7 +63,7 @@ struct SwipeView: View {
             } // refreshes data
             .refreshable {
                 // Force reload data
-                foodViewModel.objectWillChange.send()
+                viewModel.objectWillChange.send()
             }
         }
     }
@@ -75,7 +76,7 @@ struct RecipeCardView: View {
     @State private var isLiked = false
     @State private var isDisliked = false
     @State private var shake: CGFloat = 0
-    @StateObject private var foodViewModel = FoodViewModel()
+    @ObservedObject var viewModel: FoodViewModel
     //
     
     // Function To Trigger the "Shake":
@@ -127,8 +128,10 @@ struct RecipeCardView: View {
                     print("Liked: \(food.title)")
                     isLiked.toggle()
                     // if the like button is clicked, then the isDisliked var is assigned a false value.
-                    if isLiked { isDisliked = false
-                        foodViewModel.addToFavorites(food)}
+                    if isLiked {
+                        isDisliked = false
+                        viewModel.addToFavorites(food)
+                    }
                     // TRIGGERED SHAKE AND SWIPE!
                     triggerShake {
                         DispatchQueue.main.asyncAfter(deadline: .now() +  0.3) {

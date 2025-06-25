@@ -15,94 +15,113 @@ struct AddFoodView: View {
     @State private var selectedTags: Set<String> = []
     @ObservedObject var viewModel: FoodViewModel
     
-    
-    
     let categories = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"]
     
     var body: some View {
         NavigationView {
-            ScrollView(.vertical) {
-                VStack(spacing: 8) {
-                    // Image
-                    ZStack {
-                        if let uiImage = selectedImage {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                        } else {
-                            Color.gray.opacity(0.2)
-                            Image(systemName: "photo")
-                                .font(.largeTitle)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .frame(height: 175)
-                    .clipped()
-                    .cornerRadius(12)
-                    .onTapGesture {
-                        showImagePicker = true
-                    }
-                    
-                    // Form Fields
-                    Group {
-                        TextField("Recipe Title", text: $title)
-                            .customTextField()
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Ingredients")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextEditor(text: $ingredients)
-                                .scrollContentBackground(.hidden)
-                                .background(Color.pink.opacity(0.15))
-                                .cornerRadius(8)
-                                .frame(minHeight: 100)
-                                .frame(maxWidth: .infinity)
-                                .padding(4)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Instructions")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            TextEditor(text: $instructions)
-                                .scrollContentBackground(.hidden)
-                                .background(Color.pink.opacity(0.15))
-                                .cornerRadius(8)
-                                .frame(minHeight: 100)
-                                .frame(maxWidth: .infinity)
-                                .padding(4)
-                                .fixedSize(horizontal: false, vertical: true)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 20) {
+                    // Hero Image Section
+                    VStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Color(.systemGray6))
+                                .frame(height: 200)
                             
-                        }
-                        
-                        TextField("Calories", text: $calories)
-                            .keyboardType(.numberPad)
-                            .customTextField()
-                        TextField("Prep Time (e.g., 30 minutes)", text: $prepTime)
-                            .customTextField()
-                        
-                        Picker("Category", selection: $selectedCategory) {
-                            ForEach(categories, id: \.self) { category in
-                                Text(category)
+                            if let uiImage = selectedImage {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .clipped()
+                                    .cornerRadius(16)
+                            } else {
+                                VStack(spacing: 8) {
+                                    Image(systemName: "camera.fill")
+                                        .font(.system(size: 32, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                    Text("Add Photo")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        VStack(spacing: 0){
-                            TagSelectionView(selectedTags: $selectedTags)
+                        .onTapGesture {
+                            showImagePicker = true
                         }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(Color(.systemGray4), lineWidth: 1)
+                        )
+                    }
+                    
+                    // Form Section
+                    VStack(spacing: 24) {
+                        // Basic Info Group
+                        VStack(spacing: 16) {
+                            FormField(title: "Recipe Name", text: $title, placeholder: "Enter recipe name")
+                            
+                            FormTextEditor(title: "Ingredients", text: $ingredients, placeholder: "List your ingredients...")
+                            
+                            FormTextEditor(title: "Instructions", text: $instructions, placeholder: "Describe how to make it...")
+                        }
+                        
+                        // Details Group
+                        VStack(spacing: 16) {
+                            HStack(spacing: 12) {
+                                FormField(title: "Calories", text: $calories, placeholder: "0", keyboardType: .numberPad)
+                                FormField(title: "Prep Time", text: $prepTime, placeholder: "30 minutes")
+                            }
+                            
+                            // Category Picker
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Category")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.primary)
+                                
+                                Menu {
+                                    ForEach(categories, id: \.self) { category in
+                                        Button(action: {
+                                            selectedCategory = category
+                                        }) {
+                                            HStack {
+                                                Text(category)
+                                                if selectedCategory == category {
+                                                    Spacer()
+                                                    Image(systemName: "checkmark")
+                                                        .foregroundColor(.accentColor)
+                                                }
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(selectedCategory)
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        Image(systemName: "chevron.up.chevron.down")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 12)
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(12)
+                                }
+                            }
+                        }
+                        
+                        // Tags Section
+                        TagSelectionView(selectedTags: $selectedTags)
                     }
                 }
-                .padding()
-                //.frame(minHeight: 100)
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 200)
-
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .padding(.bottom, 100)
             }
-            .applyGradientBackground()
-            .scrollIndicators(.visible)
-            .ignoresSafeArea(.keyboard)
+            .background(Color(.systemBackground))
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(image: $selectedImage)
             }
@@ -112,18 +131,19 @@ struct AddFoodView: View {
                 Text(alertMessage)
             }
             .navigationTitle("New Recipe")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Post") {
+                    Button("Save") {
                         postRecipe()
                     }
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
                     .disabled(title.isEmpty || selectedImage == nil)
                 }
             }
         }
     }
-        
     
     private func postRecipe() {
         guard !title.isEmpty, let image = selectedImage else {
@@ -162,18 +182,82 @@ struct AddFoodView: View {
     }
 }
 
+// MARK: - Form Components
+struct FormField: View {
+    let title: String
+    @Binding var text: String
+    let placeholder: String
+    var keyboardType: UIKeyboardType = .default
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+            
+            TextField(placeholder, text: $text)
+                .keyboardType(keyboardType)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+                .font(.body)
+        }
+    }
+}
+
+struct FormTextEditor: View {
+    let title: String
+    @Binding var text: String
+    let placeholder: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+            
+            ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.systemGray6))
+                    .frame(minHeight: 100)
+                
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundColor(.secondary)
+                        .font(.body)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                }
+                
+                TextEditor(text: $text)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.clear)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .font(.body)
+            }
+        }
+    }
+}
+
 struct TagSelectionView: View {
     @Binding var selectedTags: Set<String>
     
-    let columns = [
-        GridItem(.adaptive(minimum: 100), spacing: 4)
-    ]
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text("Select Tags")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Tags")
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+            
+            LazyVGrid(columns: [
+                GridItem(.flexible()),
+                GridItem(.flexible()),
+                GridItem(.flexible())
+            ], spacing: 12) {
                 ForEach(FoodViewModel.predefinedTags.prefix(3), id: \.self) { tag in
                     Button(action: {
                         if selectedTags.contains(tag) {
@@ -182,16 +266,35 @@ struct TagSelectionView: View {
                             selectedTags.insert(tag)
                         }
                     }) {
-                        HStack {
-                            Image(systemName: selectedTags.contains(tag) ? "checkmark.square" : "square")
+                        HStack(spacing: 8) {
+                            Image(systemName: selectedTags.contains(tag) ? "checkmark.circle.fill" : "circle")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundColor(selectedTags.contains(tag) ? .accentColor : .secondary)
+                            
                             Text(tag)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(selectedTags.contains(tag) ? Color.accentColor.opacity(0.1) : Color(.systemGray6))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(
+                                    selectedTags.contains(tag) ? Color.accentColor.opacity(0.3) : Color.clear,
+                                    lineWidth: 1
+                                )
+                        )
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
             }
-           
-
         }
     }
 }

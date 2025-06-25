@@ -21,7 +21,7 @@ struct AnimatedTabBar: View {
                     AddFoodView(viewModel: foodViewModel)
                         .transition(.opacity.combined(with: .move(edge: .bottom)))
                 case .swipe:
-                    SwipeView()
+                    SwipeView(viewModel: foodViewModel)
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
                 case .profile:
                     ProfileView(viewModel: foodViewModel)
