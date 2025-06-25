@@ -27,6 +27,7 @@ struct SwipeView: View {
                     RecipeCardView(
                         food: filteredFoods[currIndex],
                         totalRecipes: viewModel.dummyFoods.count,
+                        //foodViewModel: foodViewModel,
                         onSwipe: {
                             if currIndex < filteredFoods.count {
                                 currIndex += 1
@@ -77,6 +78,8 @@ struct RecipeCardView: View {
     @State private var isDisliked = false
     @State private var shake: CGFloat = 0
     @ObservedObject var viewModel: FoodViewModel
+    @GestureState private var drag = CGSize.zero
+    @State private var dragOffset = CGSize.zero
     //
     
     // Function To Trigger the "Shake":
@@ -230,7 +233,47 @@ struct RecipeCardView: View {
             .padding(.top)
         }
         .padding()
-        .offset(x: shake)
+        .offset(x: drag.width + dragOffset.width + shake)
+        .rotationEffect(.degrees(Double((drag.width + dragOffset.width) / 25)))
+        .opacity(1 - Double(abs(drag.width + dragOffset.width) / 400))
+        .gesture(
+            DragGesture()
+                .updating($drag) { value, state, _ in
+                    state = value.translation
+                }
+                .onEnded { value in
+                    let threshold: CGFloat = 100
+                    // User is liking a post. (similar to tinder where users swipe right to like a post and swipe left to dislike a post)
+                    if value.translation.width > threshold {
+                        isLiked = true
+                        isDisliked = false
+                        viewModel.addToFavorites(food)
+                        withAnimation(.easeOut(duration: 1)) {
+                            dragOffset = CGSize(width: 1000, height: 0)
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            dragOffset = .zero
+                            onSwipe()
+                        }
+                    } else if value.translation.width < -threshold {
+                        // User is disliking a post.
+                        isDisliked = true
+                        isLiked = false
+                        withAnimation(.easeOut(duration: 1)) {
+                            dragOffset = CGSize(width: -1000, height: 0)
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            dragOffset = .zero
+                            onSwipe()
+                        }
+                    } else {
+                        // if the user doesn't swipe far enough, snap it back.
+                        withAnimation {
+                            dragOffset = .zero
+                        }
+                    }
+                }
+        ) // reset when the recipe changes.
         .onChange(of: food.id) { _, _ in
             isLiked = false
             isDisliked = false
