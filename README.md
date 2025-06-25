@@ -24,7 +24,7 @@ We are building a social app that allows users to swipe through low-calorie, glu
 - Swipe Recipes: Users can swipe right or left on a recipe to browse new meals. 
 - Favorites: Save liked recipes to their favorites page.
 - Tag Filters: Uses tags like "Organic", "Low-calorie", "Gluten Free" to filter through recipes.
-- Nutrition Breakdown: Each recipe clearly displays calories, ingredients, prep-time, and instructions
+- Nutrition Breakdown: Each recipe clearly displays calories, ingredients, prep-time, cost, and instructions
 - Add Your Own: Users can add their own recipes and upload their own images. 
 
 # Prototypes*
