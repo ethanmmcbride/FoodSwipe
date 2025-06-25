@@ -116,6 +116,19 @@ struct FavoriteRecipeItemView: View {
                                 .foregroundColor(.black.opacity(0.7))
                         }
                     }
+                    if !food.price.isEmpty {
+                        Text("•")
+                            .foregroundColor(.white.opacity(0.5))
+                        
+                        HStack(spacing: 2) {
+                            Image(systemName: "dollarsign.circle")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                            Text(food.price)
+                                .font(.caption)
+                                .foregroundColor(.black.opacity(0.7))
+                        }
+                    }
                 }
             }
             

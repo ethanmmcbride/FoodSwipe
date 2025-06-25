@@ -187,13 +187,26 @@ struct RecipePinView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        if !recipe.calories.isEmpty {
-                            Label(recipe.calories + " cal", systemImage: "flame")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                        }
                     }
-                    
+                    if !recipe.calories.isEmpty {
+                        Label(recipe.calories + " cal", systemImage: "flame")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                    if !recipe.price.isEmpty {
+                        HStack(spacing: 4) {
+                            Image(systemName: "dollarsign.circle")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                            Text("$" + recipe.price)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                    }
+                }
+                
+                HStack {
                     Spacer()
                     
                     // Like Button
@@ -209,6 +222,8 @@ struct RecipePinView: View {
                             .foregroundColor(isLiked ? .red : .secondary)
                     }
                 }
+                
+                
                 
                 // Category Tag
                 Text(recipe.category)
@@ -228,7 +243,9 @@ struct RecipePinView: View {
         .onAppear {
         }
     }
+    
 }
+
 
 
 extension View {

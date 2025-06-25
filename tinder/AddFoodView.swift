@@ -5,6 +5,7 @@ struct AddFoodView: View {
     @State private var ingredients = ""
     @State private var instructions = ""
     @State private var calories = ""
+    @State private var price = ""
     @State private var prepTime = ""
     @State private var selectedCategory = "Dinner"
     @State private var tags = ""
@@ -72,6 +73,7 @@ struct AddFoodView: View {
                             HStack(spacing: 12) {
                                 FormField(title: "Calories", text: $calories, placeholder: "0", keyboardType: .numberPad)
                                 FormField(title: "Prep Time", text: $prepTime, placeholder: "30 minutes")
+                                FormField(title: "Cost: $", text: $price, placeholder: "0")
                             }
                             
                             // Category Picker
@@ -158,6 +160,7 @@ struct AddFoodView: View {
             instructions: instructions,
             ingredients: ingredients,
             calories: calories,
+            price: price,
             prepTime: prepTime,
             category: selectedCategory,
             tags: selectedTags.joined(separator: ",")
@@ -175,6 +178,7 @@ struct AddFoodView: View {
         ingredients = ""
         instructions = ""
         calories = ""
+        price = ""
         prepTime = ""
         selectedCategory = "Dinner"
         tags = ""

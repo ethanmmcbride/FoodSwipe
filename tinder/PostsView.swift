@@ -76,6 +76,11 @@ struct PostsView: View {
                                         .font(.caption)
                                         .foregroundColor(.blue)
                                 }
+                                if !food.price.isEmpty {
+                                    Label("$" + food.price, systemImage: "dollarsign.circle")
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                }
                             }
                             
                             if !food.ingredients.isEmpty { // Ingredients

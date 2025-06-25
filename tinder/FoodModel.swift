@@ -10,6 +10,7 @@ struct Food: Identifiable, Codable {
     var instructions: String
     var ingredients: String
     var calories: String
+    var price: String
     var prepTime: String
     var category: String
     var tags: String
@@ -23,12 +24,13 @@ struct Food: Identifiable, Codable {
     }
     
     // Initialize with UIImage --> converts to type Data
-    init(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
+    init(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", price: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
         self.title = title
         self.imageData = image.jpegData(compressionQuality: 0.8) ?? Data()
         self.instructions = instructions
         self.ingredients = ingredients
         self.calories = calories
+        self.price = price
         self.prepTime = prepTime
         self.category = category
         self.tags = tags
@@ -85,13 +87,14 @@ class FoodViewModel: ObservableObject {
     }
     
     // Add food with all parameters
-    func addFood(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
+    func addFood(title: String, image: UIImage, instructions: String, ingredients: String = "", calories: String = "", price: String = "", prepTime: String = "", category: String = "Dinner", tags: String = "") {
         let newFood = Food(
             title: title,
             image: image,
             instructions: instructions,
             ingredients: ingredients,
             calories: calories,
+            price: price,
             prepTime: prepTime,
             category: category,
             tags: tags
