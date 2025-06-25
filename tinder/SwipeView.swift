@@ -28,13 +28,20 @@ struct SwipeView: View {
                         food: filteredFoods[currIndex],
                         totalRecipes: foodViewModel.dummyFoods.count,
                         onSwipe: {
-                            if currIndex + 1 < filteredFoods.count {
+                            if currIndex < filteredFoods.count {
                                 currIndex += 1
                             }
                         }
                     )
                 } else {
-                    Text("No more recipes to show!")
+                    VStack {
+                        Spacer()
+                        Text("No more recipes to show!")
+                            .multilineTextAlignment(.center)
+                            .font(.headline)
+                        Spacer()
+                    }
+                    .offset(y: 250)
                 }
             }
             .scrollContentBackground(.hidden)
