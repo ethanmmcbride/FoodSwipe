@@ -33,4 +33,5 @@ We are building a social app that allows users to swipe through low-calorie, glu
 <img width="740" alt="Screenshot 2025-06-24 at 9 55 52 AM" src="https://github.com/user-attachments/assets/62b6dd4f-0d
 ba-43ea-a8b0-a092ecad3ae4" />
 <img width="153" alt="Screenshot 2025-06-24 at 9 56 29 AM" src="https://github.com/user-attachments/assets/cdb9598b-8f75-4232-9514-473d8b39298b" />
+![Screenshot 2025-06-27 at 4 47 14 PM](https://github.com/user-attachments/assets/7f51ca6e-9d7f-4ee1-b4b6-3fcfb519c2d4)
 
